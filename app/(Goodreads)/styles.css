@@ -1,0 +1,83 @@
+body   {
+    margin: 0;
+    padding: 20px;
+    background-color: #e3d5b7;
+}
+
+body * {
+    font-family: Arial,
+    Helvetica, sans-serif;
+}
+
+@media (min-width: 768px) {
+    #wd-goodreads .wd-main-content-offset {
+        padding-top: 250px !important;
+    }
+}
+
+/* Sign in/Up Box Styling */
+.center-box {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1rem;
+    background-color: #e3d5b7;
+}
+
+/* Inner content box */
+.center-box-inner {
+    background-color: #ffffff;
+    padding: 5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+}
+
+input[type="text"],
+input[type="password"]
+ {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+/* Buttons */
+button {
+    background-color: #a08061;
+    color: white;
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+a {
+    color: #8c6d54;
+    text-decoration: none;
+}
+
+/* Form Control Styles */
+.form-control {
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    width: 90%;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+.form-label {
+    font-weight: 600;
+    color: #4a3a2b;  /* warm brown/tan theme */
+    margin-bottom: 6px;
+    display: block;
+    font-size: 16px;
+}
