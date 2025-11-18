@@ -1,4 +1,4 @@
 import { redirect } from "next/navigation";
 export default function Goodreads() {
-    redirect("/Account/Signin");
+    redirect("/home");
 }

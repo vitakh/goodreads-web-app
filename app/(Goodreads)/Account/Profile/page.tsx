@@ -57,7 +57,7 @@ export default function Profile() {
                                  defaultValue={profile.email}
                                  onChange={(e) => setProfile({ ...profile, email: e.target.value })} />
                     <FormLabel> Role: {profile.role}</FormLabel>
-                    <button onClick={updateProfile} className="btn btn-primary w-100 mb-2"> Update </button>
+                    <Button onClick={updateProfile} className="btn btn-primary w-100 mb-2"> Update </Button>
                     <Button onClick={signout} className="w-100 mb-2" id="wd-signout-btn">
                         Sign out
                     </Button>

@@ -5,16 +5,18 @@ import { ListGroup, ListGroupItem } from "react-bootstrap";
 export default function GoodreadsNavigation() {
     const pathname = usePathname();
     const links = [
-        {label: "Home", path: "/Home"},
-        {label: "My Books", path: "/Books"},
+        {label: "Home", path: "/home"},
+        {label: "Bookshelf", path: "/Bookshelf"},
         {label: "Browse", path: "/Browse"},
-        {label: "Profile", path: "/Profile"},
+        {label: "Profile", path: "/Account/Profile"},
     ];
     return (
-        <ListGroup>
+        <ListGroup className="navbar-container">
             {links.map((link)=> (
-                <ListGroupItem key={link.path} as={Link} href={link.path}>
-                    {link.label}
+                <ListGroupItem key={link.path} className="navbar-item">
+                    <Link href={link.path} className="navbar-link">
+                        {link.label}
+                    </Link>
                 </ListGroupItem>
             ))}
         </ListGroup>
