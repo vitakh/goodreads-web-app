@@ -1,0 +1,9 @@
+import accountReducer from "./Account/reducer";
+import { configureStore } from "@reduxjs/toolkit";
+export type RootState = ReturnType<typeof store.getState>;
+const store = configureStore({
+    reducer: {
+        accountReducer,
+    },
+});
+export default store;
