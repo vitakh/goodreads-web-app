@@ -5,9 +5,9 @@ import { ListGroup, ListGroupItem } from "react-bootstrap";
 export default function GoodreadsNavigation() {
     const pathname = usePathname();
     const links = [
-        {label: "Home", path: "/home"},
+        {label: "Home", path: "/Home"},
         {label: "Bookshelf", path: "/Bookshelf"},
-        {label: "Browse", path: "/Browse"},
+        {label: "Search", path: "/Search"},
         {label: "Profile", path: "/Account/Profile"},
     ];
     return (

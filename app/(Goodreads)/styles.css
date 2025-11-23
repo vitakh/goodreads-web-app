@@ -64,6 +64,11 @@ a {
     text-decoration: none;
 }
 
+.wd-search-btn {
+    width: auto;
+    margin-left: 8px;
+}
+
 /* Form Control Styles */
 .form-control {
     border-radius: 8px;
@@ -130,4 +135,13 @@ a {
     font-size: 15px;
     color: #3a3a3a;
     appearance: none;
+
+/* Styling for search bar*/
+.search-bar-results {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.2s;
+}
 }
