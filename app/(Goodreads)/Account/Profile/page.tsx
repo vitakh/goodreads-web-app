@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { redirect } from "next/dist/client/components/navigation";
 import * as client from "../client";
