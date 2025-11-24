@@ -2,8 +2,8 @@ import React from "react";
 
 export default function BookshelfTable({ bookshelf }: { bookshelf: any[] }) {
     return (
-        <table className="bookshelf-table">
-            <thead>
+        <table className="table table-striped table-bordered bookshelf-table">
+            <thead className="table-light">
                 <tr>
                     <th>Cover</th>
                     <th>Title</th>
