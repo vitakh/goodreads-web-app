@@ -16,7 +16,7 @@ export default function Signup() {
     const [user, setUser] = useState<User>({
         username: "",
         password: "",
-        role: "USER",
+        role: "",
     });
     const dispatch = useDispatch();
     const signup = async () => {
@@ -35,8 +35,8 @@ export default function Signup() {
                              onChange={(e) =>setUser({ ...user, password: e.target.value })}
                              className="mb-2" placeholder="Password" type="password" />
                 <select className="signup-select"
+                        value={user.role}
                         onChange={(e) => setUser({ ...user, role: e.target.value })} >
-                    <option value="">Select role</option>
                     <option value="USER">User</option>
                     <option value="ADMIN">Admin</option>
                     <option value="AUTHOR">Author</option>
