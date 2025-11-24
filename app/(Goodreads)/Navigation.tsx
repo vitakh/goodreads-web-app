@@ -6,7 +6,7 @@ export default function GoodreadsNavigation() {
     const pathname = usePathname();
     const links = [
         {label: "Home", path: "/Home"},
-        {label: "Bookshelf", path: "/Bookshelf"},
+        {label: "BookShelf", path: "/BookShelf"},
         {label: "Search", path: "/Search"},
         {label: "Profile", path: "/Account/Profile"},
     ];
