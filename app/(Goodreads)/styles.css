@@ -67,6 +67,23 @@ a {
 .wd-search-btn {
     width: auto;
     margin-left: 8px;
+    background-color: #a08061;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.wd-search-btn:hover,
+.wd-search-btn:focus,
+.wd-search-btn:active {
+    background-color: #8c6d54 !important;
+    color: white !important;
+    border-color: #8c6d54 !important;
+    box-shadow: none !important;
 }
 
 /* Form Control Styles */
@@ -135,13 +152,57 @@ a {
     font-size: 15px;
     color: #3a3a3a;
     appearance: none;
-
-/* Styling for search bar*/
-.search-bar-results {
-  display: flex;
-  align-items: flex-start;
-  padding: 1rem;
-  border-bottom: 1px solid #ddd;
-  transition: background-color 0.2s;
 }
+
+/* Seach page styling */
+.list-group-item.book-search-results {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 16px;
+    padding: 16px;
+    border-bottom: 1px solid #e0d9cf;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.list-group-item.book-search-results img {
+    flex: 0 0 auto;
+    width: 80px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.book-search-results .book-text-attributes {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start !important;
+    align-items: flex-start;
+    min-width: 0;
+    text-align: left;
+}
+
+.book-search-results .book-text-attributes h5 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #4a3a2b;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.2;
+}
+
+.book-search-results .book-text-attributes p {
+    margin: 6px 0 0 0;
+    font-size: 14px;
+    color: #6b5b4b;
+}
+
+.book-search-results hr {
+    flex-basis: 100%;
+    border: 0;
+    border-top: 1px solid #e0d9cf;
+    margin: 12px 0 0 0;
 }
