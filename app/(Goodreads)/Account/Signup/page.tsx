@@ -30,11 +30,12 @@ export default function Signup() {
                 <h1>Sign up</h1>
                 <FormControl defaultValue={user.username}
                              onChange={(e) => setUser({ ...user, username: e.target.value })}
-                             className="mb-2" placeholder="username" type="text"/>
+                             className="mb-2" placeholder="User Name" type="text"/>
                 <FormControl defaultValue={user.password}
                              onChange={(e) =>setUser({ ...user, password: e.target.value })}
-                             className="mb-2" placeholder="password" type="password" />
+                             className="mb-2" placeholder="Password" type="password" />
                 <select className="signup-select"
+                        value={user.role}
                         onChange={(e) => setUser({ ...user, role: e.target.value })} >
                     <option value="USER">User</option>
                     <option value="ADMIN">Admin</option>
