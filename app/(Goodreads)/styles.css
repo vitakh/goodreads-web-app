@@ -41,8 +41,8 @@ input[type="password"]
     width: 100%;
     padding: 12px 14px;
     margin: 8px 0;
-    border: none;
     border-radius: 8px;
+    border-color: cornflowerblue;
     font-size: 16px;
     background-color: #fff;
 }

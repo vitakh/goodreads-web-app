@@ -16,7 +16,7 @@ export default function Signup() {
     const [user, setUser] = useState<User>({
         username: "",
         password: "",
-        role: "",
+        role: "USER",
     });
     const dispatch = useDispatch();
     const signup = async () => {
