@@ -48,7 +48,6 @@ export default function Search() {
             onClick={() => {
               searchBooks();
             }}
-            variant="primary"
             className="wd-search-btn"
           >
             Search
@@ -65,13 +64,16 @@ export default function Search() {
                       book.volumeInfo?.imageLinks?.thumbnail || "noimage.png"
                     }
                     alt={book.volumeInfo?.title || "No Title"}
+                    height={120}
                     width={100}
                     thumbnail
                   />
+                  <div className="book-text-attributes">
                   <h5>{book.volumeInfo?.title || "No Title"}</h5>
                   <p>
-                    {book.volumeInfo?.authors?.join(", ") || "Unknown Author"}
+                    by {book.volumeInfo?.authors?.join(", ") || "Unknown Author"}
                   </p>
+                  </div>
                 </ListGroupItem>
               );
             })}
@@ -79,7 +81,6 @@ export default function Search() {
         )}
       </div>
     </div>
-    // TODO: Display search bar that shows results for book title
     // TODO: Each Book title should be a link to the details page of that book
   );
 }
