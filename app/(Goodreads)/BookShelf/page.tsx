@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import "./styles.css";
 import { useSelector } from "react-redux";
@@ -25,7 +26,7 @@ export default function BookShelf() {
         <div>
             <h1 className="bookshelf-header">
                 <span role="img" aria-label="bookshelf" style={{ fontSize: "2rem" }}>📚</span>
-                {currentUser.username}'s Bookshelf
+                {currentUser.username}&apos;s Bookshelf
             </h1>
             {bookshelf.length === 0 && <div>No books found.</div>}
             <BookshelfTable bookshelf={bookshelf} />

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import Link from "next/link";
 export default function BookshelfTable({ bookshelf }: { bookshelf: any[] }) {
