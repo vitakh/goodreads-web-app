@@ -31,7 +31,7 @@ body * {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     width: 100%;
-    max-width: 800px;
+    max-width: 80%;
     text-align: center;
 }
 
@@ -144,4 +144,24 @@ a {
   border-bottom: 1px solid #ddd;
   transition: background-color 0.2s;
 }
+}
+
+/*Title Link for Books*/
+.link {
+    text-decoration: underline;
+}
+
+/*Details Page*/
+.book-details-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2rem;
+    text-align: left;
+}
+.book-details-image {
+    flex: 0 0 150px;
+}
+.book-details-info {
+    flex: 1;
 }

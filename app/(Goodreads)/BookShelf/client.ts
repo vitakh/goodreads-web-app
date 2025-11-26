@@ -10,3 +10,57 @@ export const getBookshelf = async (userId: string) => {
     console.log("Bookshelf response:", response.data);
     return response.data;
 };
+
+export const addBookToShelf = async (
+    userId: string,
+    bookId: string,
+    shelf: string
+) => {
+    const response = await axios.post(BOOKSHELF_API, {
+        userId,
+        bookId,
+        shelf,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        dateFinished: null
+    });
+    return response.data;
+};
+
+export const getBookById = async (bookId: string) => {
+    try {
+        const res = await axios.get(`${HTTP_SERVER}/api/books/${bookId}`);
+        return res.data;
+    } catch (err: any) {
+        if (err.response?.status === 404) {
+            return null;
+        }
+        throw err;
+    }
+};
+
+export const getSingleBookById = async (bookId: string) => {
+    try {
+        const res = await axios.get(`${HTTP_SERVER}/api/books/details/${bookId}`);
+        return res.data;
+    } catch (err: any) {
+        if (err.response?.status === 404) {
+            return null;
+        }
+        throw err;
+    }
+};
+
+export const createBook = async (bookData: any) => {
+    const res = await axios.post(`${HTTP_SERVER}/api/books`, bookData);
+    return res.data;
+};
+
+export const addShelfEntry = async (shelfData: any) => {
+    const res = await axios.post(BOOKSHELF_API, shelfData);
+    return res.data;
+};
+
+export const removeShelfEntry = (userId: string, bookId: string) => {
+    return axios.delete(BOOKSHELF_API, { data: { userId, bookId } });
+};

@@ -1,5 +1,5 @@
 import React from "react";
-
+import Link from "next/link";
 export default function BookshelfTable({ bookshelf }: { bookshelf: any[] }) {
     return (
         <table className="table table-striped table-bordered bookshelf-table">
@@ -19,16 +19,20 @@ export default function BookshelfTable({ bookshelf }: { bookshelf: any[] }) {
                 {bookshelf.map((item: any) => (
                     <tr key={item.bookId}>
                         <td>
-                            <img
-                                src={item.book.coverImageUrl}
-                                alt={item.book.title}
-                                style={{ width: "60px", height: "90px", objectFit: "cover" }}
-                            />
+                            {/*<img*/}
+                            {/*    src={item.book.coverImageUrl || "/noimage.png"}*/}
+                            {/*    alt={item.book.title || "No title"}*/}
+                            {/*    style={{ width: "60px", height: "90px", objectFit: "cover" }}*/}
+                            {/*/>*/}
                         </td>
-                        <td>{item.book.title}</td>
+                        <td>
+                            <Link href={`/${item.book._id}/Detail`} className="link">
+                                {item.book.title}
+                            </Link>
+                        </td>
                         <td>{item.book.authors?.join(", ")}</td>
                         <td>{item.shelf}</td>
-                        <td>{item.book.notes}</td>
+                        <td>{item.notes}</td>
                         <td>{new Date(item.createdAt).toLocaleDateString()}</td>
                         <td>{new Date(item.updatedAt).toLocaleDateString()}</td>
                         <td>{item.dateFinished ? new Date(item.dateFinished).toLocaleDateString() : "Not finished"}</td>
