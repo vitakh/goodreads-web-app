@@ -31,7 +31,7 @@ body * {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     width: 100%;
-    max-width: 800px;
+    max-width: 80%;
     text-align: center;
 }
 
@@ -41,8 +41,8 @@ input[type="password"]
     width: 100%;
     padding: 12px 14px;
     margin: 8px 0;
-    border: none;
     border-radius: 8px;
+    border-color: cornflowerblue;
     font-size: 16px;
     background-color: #fff;
 }
@@ -205,4 +205,25 @@ a {
     border: 0;
     border-top: 1px solid #e0d9cf;
     margin: 12px 0 0 0;
+}
+}
+
+/*Title Link for Books*/
+.link {
+    text-decoration: underline;
+}
+
+/*Details Page*/
+.book-details-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2rem;
+    text-align: left;
+}
+.book-details-image {
+    flex: 0 0 150px;
+}
+.book-details-info {
+    flex: 1;
 }

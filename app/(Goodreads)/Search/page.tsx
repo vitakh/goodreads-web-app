@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import axios from "axios";
+import Link from "next/link";
 import { useState } from "react";
 import {
   Button,
@@ -69,7 +70,9 @@ export default function Search() {
                     thumbnail
                   />
                   <div className="book-text-attributes">
-                  <h5>{book.volumeInfo?.title || "No Title"}</h5>
+                  <Link href={`/${book.id}/Detail`} className="link">
+                        {book.volumeInfo?.title || "No Title"}
+                    </Link>
                   <p>
                     by {book.volumeInfo?.authors?.join(", ") || "Unknown Author"}
                   </p>
