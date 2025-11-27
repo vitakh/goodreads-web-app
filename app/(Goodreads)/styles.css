@@ -42,7 +42,7 @@ input[type="password"]
     padding: 12px 14px;
     margin: 8px 0;
     border-radius: 8px;
-    border-color: cornflowerblue;
+    /* border-color: cornflowerblue; */
     font-size: 16px;
     background-color: #fff;
 }
@@ -206,7 +206,6 @@ a {
     border-top: 1px solid #e0d9cf;
     margin: 12px 0 0 0;
 }
-}
 
 /*Title Link for Books*/
 .link {
@@ -221,9 +220,11 @@ a {
     gap: 2rem;
     text-align: left;
 }
+
 .book-details-image {
     flex: 0 0 150px;
 }
+
 .book-details-info {
     flex: 1;
 }

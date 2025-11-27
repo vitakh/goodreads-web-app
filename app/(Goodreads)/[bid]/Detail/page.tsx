@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { addBookToShelf, getBookshelf, addShelfEntry, getBookById, createBook, removeShelfEntry, getSingleBookById } from "../../BookShelf/client";
 import axios from "axios";
-import {Image} from "react-bootstrap";
+import {Button, Form, FormControl, Image} from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { createReview, getAllReviews, getReviewsByBookId, deleteReview, updateReview } from "./client";
+import "./styles.css";
+
 export default function Detail() {
     // TODO: Check if book already exists before adding (avoid error for duplicate books)
     // TODO: Check if book already exists on shelf to maybe remove/disable button
@@ -17,7 +21,13 @@ export default function Detail() {
         volumeInfo: { title: "", authors: [], description: "", imageLinks: {thumbnail: ""}, categories: [] as string[] }
     });
     const {bid} = useParams();
+    const [reviews, setReviews] = useState<any[]>([]);
+    const [newReview, setNewReview] = useState("");
+    const [editReview, setEditReview] = useState(false);
+    const [editReviewContent, setEditReviewContent] = useState("");
+
     const fetchUserShelves = async () => {
+        if (!currentUser) return;
         try {
             const shelvesWithBooks = await getBookshelf(currentUser._id);
 
@@ -30,6 +40,7 @@ export default function Detail() {
             console.error("Error fetching user shelves:", err);
         }
     };
+
     const fetchBook = async () => {
         try {
             const data = await getBookById(bid as string);
@@ -38,10 +49,23 @@ export default function Detail() {
             console.error("Error fetching book:", err);
         }
     };
+
+    const fetchReviews = async () => {
+        try {
+            const data = await getReviewsByBookId(bid as string);
+            setReviews(Array.isArray(data) ? data : []);
+        } catch (err) {
+            console.error("Error fetching reviews:", err);
+            setReviews([]);
+        }
+    };
+
     useEffect(() => {
         fetchBook();
         fetchUserShelves();
+        fetchReviews();
     }, [bid]);
+    
     const handleAddToShelf = async () => {
         if (!currentUser || !book) {
             setStatus("Please sign in to add books.");
@@ -85,6 +109,41 @@ export default function Detail() {
         }
     };
 
+    const handlePostReview = async () => {
+    if (!currentUser) {
+        alert("Please sign in to post a review.")
+        redirect("/Account/Signin");
+    }
+
+    if (newReview.trim().length === 0) {
+        alert("Review cannot be empty.");
+        return;
+    }
+
+    try {
+        await createReview({
+            review: newReview,
+            bookId: bid,
+            authorId: currentUser._id,
+        });
+
+        setNewReview("");
+        console.log("Review added.");
+        await fetchReviews();
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+ const handleDeleteReview = async (reviewId: string) => {
+    await deleteReview(reviewId);
+    await fetchReviews();
+  };
+
+  const handleEditReview = async (reviewId: string, updatedContent: string) => {
+    await updateReview(reviewId, updatedContent);
+    await fetchReviews();
+  };
 
     const info = book.volumeInfo;
     const html = info.description;
@@ -101,6 +160,7 @@ export default function Detail() {
                             alt={info.title || "No Title"}
                             thumbnail
                             fluid
+                            height={250}
                         />
                     </div>
 
@@ -138,8 +198,51 @@ export default function Detail() {
     <div className="center-box">
         <div className="center-box-inner">
             <h1>Reviews:</h1>
+            {currentUser ? (
+                <div>
+                    <Form.Group>
+                        <Form.Label htmlFor="review-input" className="review-input">What did you think?</Form.Label>
+                        <Form.Control id="review-input" type="text" value={newReview} onChange={(e) => setNewReview(e.target.value)} as="textarea" rows={3} placeholder="Enter your review" />
+                    </Form.Group>
+                    <button onClick={handlePostReview}>Post Review</button>
+                </div>
+            ) : (
+                <div>
+                    <p>Please sign in to leave a review.</p>
+                </div>
+            )}
+            {reviews.length === 0 ? (<p>No reviews yet.</p>) : 
+            (reviews.map((review: any) => (
+                <div key={review._id} className="review-entry">
+                                <h4>{review.author?.username || "Unknown"}</h4>
+                                <small className="text-muted">{new Date(review.createdAt).toLocaleDateString()}</small>
+                                {!editReview ? <p>{review.review}</p> : (
+                                    <div>
+                                        <FormControl as="textarea" rows={3} value={editReviewContent} onChange={(e) => setEditReviewContent(e.target.value)} />
+                                        <Button onClick={async () => {
+                                            await handleEditReview(review._id, editReviewContent);
+                                            setEditReview(false);
+                                        }}>Save</Button>
+                                        <Button onClick={() => setEditReview(false)}>Cancel</Button>
+                                    </div>
+                                )
+                                }
+                                {
+                                    currentUser && (currentUser._id === review.authorId || currentUser.role === "ADMIN") && !editReview && (
+                                        <div>
+                                            <Button onClick={() => {setEditReview(true); setEditReviewContent(review.review)}}>Edit review</Button>
+                                            <Button className="btn-delete-review" onClick={() => handleDeleteReview(review._id)}>Delete review</Button>
+                                        </div>
+                                    )
+                                }
+                                
+                               
+                </div>
+            )))}
+            
         </div>
     </div>
         </div>
     );
 }
+// TODO: make a handle edit review
