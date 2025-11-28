@@ -1,0 +1,41 @@
+/* Sign in/Up Box Styling */
+.center-box {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1rem;
+    background-color: #e3d5b7;
+}
+
+/* Inner content box */
+.center-box-inner {
+    background-color: #ffffff;
+    padding: 5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 85%;
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    max-width: 95%;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.col {
+    flex: 1;
+    min-width: 200px;
+}
+
+.box {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+}

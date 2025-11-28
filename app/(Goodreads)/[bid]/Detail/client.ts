@@ -33,3 +33,13 @@ export const updateReview = async (reviewId: string, updatedContent: string) => 
     const response = await axiosWithCredentials.put(`${REVIEW_API}/update/${reviewId}`, { review: updatedContent });
     return response.data;
 }
+
+export const findRecentReviews = async () => {
+    const response = await axios.get(`${REVIEW_API}/recent`);
+    return response.data;
+}
+
+export const findRecentReviewUser = async (authorId: string) => {
+    const response = await axios.get(`${REVIEW_API}/user/recent`, {params: {authorId}});
+    return response.data;
+}
