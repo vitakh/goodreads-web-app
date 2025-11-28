@@ -65,3 +65,13 @@ export const addShelfEntry = async (shelfData: any) => {
 export const removeShelfEntry = (userId: string, bookId: string) => {
     return axios.delete(BOOKSHELF_API, { data: { userId, bookId } });
 };
+
+export const findRecentShelf = async () => {
+    const response = await axios.get(`${BOOKSHELF_API}/recent`);
+    return response.data;
+}
+
+export const findRecentShelfUser = async (userId: string) => {
+    const response = await axios.get(`${BOOKSHELF_API}/user/recent`, {params: {userId}});
+    return response.data;
+}
