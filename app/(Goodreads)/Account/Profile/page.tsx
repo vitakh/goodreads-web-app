@@ -27,7 +27,7 @@ export default function Profile() {
                 setIsOwnProfile(false);
             } catch (err) {
                 console.error("User not found:", err);
-                redirect("/Home"); // or show error message
+                redirect("/Home"); 
             }
         } else if (currentUser) {
             setProfile(currentUser);
@@ -87,11 +87,16 @@ export default function Profile() {
             {/* Public profile - viewing another user's profile */}
             {!isOwnProfile && profile && (
                 <div>
-                    <p><strong>Username:</strong> {profile.username}</p>
-                    <p><strong>First Name:</strong> {profile.firstName}</p>
-                    <p><strong>Last Name:</strong> {profile.lastName}</p>
-                    <p><strong>Role:</strong> {profile.role}</p>
-                    <p><strong>Last Activity:</strong> {profile.lastActivity}</p>
+                    <FormLabel> Username: </FormLabel>
+                    <FormControl className="mb-2" value={profile.username} disabled />
+                    <FormLabel> First Name: </FormLabel>
+                    <FormControl className="mb-2" value={profile.firstName} disabled />
+                    <FormLabel> Last Name: </FormLabel>
+                    <FormControl className="mb-2" value={profile.lastName} disabled />
+                    <FormLabel> Role: </FormLabel>
+                    <FormControl className="mb-2" value={profile.role} disabled />
+                    <FormLabel> Last Activity: </FormLabel>
+                    <FormControl className="mb-2" value={profile.lastActivity || "N/A"} disabled />
                 </div>
             )}
         </div>
