@@ -1,70 +1,95 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { redirect } from "next/dist/client/components/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import * as client from "../client";
+import * as reviewClient from "../../[bid]/Detail/client";
+import * as bookshelfClient from "../../BookShelf/client";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
 import { RootState } from "../../store";
-import {Button, FormControl, FormLabel} from "react-bootstrap";
+import PrivateProfile from "./PrivateProfile";
+import PublicProfile from "./PublicProfile";
+
 export default function Profile() {
     const [profile, setProfile] = useState<any>({});
+    const [reviews, setReviews] = useState<any[]>([]);
+    const [bookshelf, setBookshelf] = useState<any[]>([]);
+    const [isOwnProfile, setIsOwnProfile] = useState(true);
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+    const searchParams = useSearchParams();
+    const userId = searchParams.get("userId");
+    
     const updateProfile = async () => {
         const updatedProfile = await client.updateUser(profile);
         dispatch(setCurrentUser(updatedProfile));
     };
-    const fetchProfile = () => {
-        if (!currentUser) return redirect("/Account/Signin");
-        setProfile(currentUser);
+
+    const fetchProfile = async () => {
+        if (userId && (!currentUser || userId !== currentUser._id)) {
+            try {
+                const publicUser = await client.publicProfile(userId);
+                setProfile(publicUser);
+                setIsOwnProfile(false);
+                // Fetch reviews for this user
+                const userReviews = await reviewClient.findRecentReviewUser(userId);
+                setReviews(userReviews);
+                // Fetch bookshelf for this user
+                const userBookshelf = await bookshelfClient.findRecentShelfUser(userId);
+                setBookshelf(userBookshelf);
+            } catch (err) {
+                console.error("User not found:", err);
+                redirect("/Home"); 
+            }
+        } else if (currentUser) {
+            setProfile(currentUser);
+            setIsOwnProfile(true);
+            // Fetch reviews for current user
+            const userReviews = await reviewClient.findRecentReviewUser(currentUser._id);
+            setReviews(userReviews);
+            // Fetch bookshelf for current user
+            const userBookshelf = await bookshelfClient.findRecentShelfUser(currentUser._id);
+            setBookshelf(userBookshelf);
+        } else {
+            redirect("/Account/Signin");
+        }
     };
+
     const signout = async () => {
         await client.signout();
         dispatch(setCurrentUser(null));
         redirect("/Account/Signin");
     };
+
     useEffect(() => {
         fetchProfile();
-    }, []);
+    }, [userId, currentUser]);
+
     return (
         <div className="wd-profile-screen">
-            <h3>Profile</h3>
-            {/*Profile to show if current user is looking at own profile*/}
-            {profile && (
-                <div>
-                    <FormLabel> Username: </FormLabel>
-                    <FormControl className="mb-2"
-                                 defaultValue={profile.username}
-                                 onChange={(e) => setProfile({ ...profile, username: e.target.value }) } />
-                    <FormLabel> Password </FormLabel>
-                    <FormControl className="mb-2"
-                                 defaultValue={profile.password}
-                                 onChange={(e) => setProfile({ ...profile, password: e.target.value }) } />
-                    <FormLabel> First Name: </FormLabel>
-                    <FormControl className="mb-2"
-                                 defaultValue={profile.firstName}
-                                 onChange={(e) => setProfile({ ...profile, firstName: e.target.value }) } />
-                    <FormLabel> Last Name: </FormLabel>
-                    <FormControl className="mb-2"
-                                 defaultValue={profile.lastName}
-                                 onChange={(e) => setProfile({ ...profile, lastName: e.target.value }) } />
-                    <FormLabel> Date of Birth: </FormLabel>
-                    <FormControl className="mb-2" type="date"
-                                 defaultValue={profile.dob}
-                                 onChange={(e) => setProfile({ ...profile, dob: e.target.value })} />
-                    <FormLabel> Email: </FormLabel>
-                    <FormControl className="mb-2"
-                                 defaultValue={profile.email}
-                                 onChange={(e) => setProfile({ ...profile, email: e.target.value })} />
-                    <FormLabel> Role: {profile.role}</FormLabel>
-                    <Button onClick={updateProfile} className="btn btn-primary w-100 mb-2"> Update </Button>
-                    <Button onClick={signout} className="w-100 mb-2" id="wd-signout-btn">
-                        Sign out
-                    </Button>
-                </div>
+            <h3>{isOwnProfile ? "My Profile" : `${profile.username}'s Profile`}</h3>
+            
+            {/* Private profile - own profile with edit access */}
+            {isOwnProfile && profile && (
+                <PrivateProfile
+                    profile={profile}
+                    setProfile={setProfile}
+                    reviews={reviews}
+                    bookshelf={bookshelf}
+                    updateProfile={updateProfile}
+                    signout={signout}
+                />
             )}
-            {/*Profile to show for viewing another persons profile*/}
-            {/*TODO*/}
+            
+            {/* Public profile - viewing another user's profile */}
+            {!isOwnProfile && profile && (
+                <PublicProfile
+                    profile={profile}
+                    reviews={reviews}
+                    bookshelf={bookshelf}
+                />
+            )}
         </div>
-    );}
+    );
+}

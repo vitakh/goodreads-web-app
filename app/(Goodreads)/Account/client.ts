@@ -34,3 +34,9 @@ export const signout = async () => {
     console.log("Signout response:", response.data);
     return response.data;
 };
+export const publicProfile = async (userId: string) => {
+    console.log("Fetching public profile for:", userId);
+    const response = await axiosWithCredentials.get(`${USERS_API}/profile/${userId}`);
+    console.log("Public profile response:", response.data);
+    return response.data;
+};
