@@ -10,12 +10,10 @@ import {
   Image,
   ListGroupItem,
 } from "react-bootstrap";
-import { useDispatch } from "react-redux";
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
-  const dispatch = useDispatch();
 
   const searchBooks = async () => {
     try {
@@ -84,6 +82,5 @@ export default function Search() {
         )}
       </div>
     </div>
-    // TODO: Each Book title should be a link to the details page of that book
   );
 }

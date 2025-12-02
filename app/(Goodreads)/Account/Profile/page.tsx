@@ -16,6 +16,8 @@ export default function Profile() {
     const [reviews, setReviews] = useState<any[]>([]);
     const [bookshelf, setBookshelf] = useState<any[]>([]);
     const [isOwnProfile, setIsOwnProfile] = useState(true);
+    const [loading, setLoading] = useState(true);
+
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: RootState) => state.accountReducer);
     const searchParams = useSearchParams();
@@ -27,6 +29,7 @@ export default function Profile() {
     };
 
     const fetchProfile = async () => {
+        setLoading(true);
         if (userId && (!currentUser || userId !== currentUser._id)) {
             try {
                 const publicUser = await client.publicProfile(userId);
@@ -54,6 +57,7 @@ export default function Profile() {
         } else {
             redirect("/Account/Signin");
         }
+        setLoading(false);
     };
 
     const signout = async () => {
@@ -65,6 +69,8 @@ export default function Profile() {
     useEffect(() => {
         fetchProfile();
     }, [userId, currentUser]);
+
+    if (loading) return <div>Loading...</div>;
 
     return (
         <div className="wd-profile-screen">

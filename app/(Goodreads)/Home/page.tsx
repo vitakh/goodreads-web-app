@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import "./styles.css";
 import Link from "next/link";
@@ -5,16 +6,18 @@ import { useSelector } from "react-redux";
 import {findRecentReviews, getAllReviews, findRecentReviewUser} from "../[bid]/Detail/client";
 import { useEffect, useState } from "react";
 import {getBookById, findRecentShelf, findRecentShelfUser} from "../BookShelf/client";
+
 export default function Home() {
     const [reviews, setReviews] = useState([]);
     const [shelf, setShelf] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
     const fetchReviews = async () => {
         if (!currentUser) {
             const data = await findRecentReviews();
             setReviews(data);
-        }
-        if (currentUser) {
+        } else {
             const data = await findRecentReviewUser(currentUser._id);
             setReviews(data);
         }
@@ -24,17 +27,25 @@ export default function Home() {
         if (!currentUser) {
             const data = await findRecentShelf();
             setShelf(data);
-        }
-        if (currentUser) {
+        } else {
             const data = await findRecentShelfUser(currentUser._id);
             setShelf(data);
         }
     };
 
+    const fetchReviewAndShelf = async () => {
+        setLoading(true);
+        await fetchReviews();
+        await fetchShelves();
+        setLoading(false);
+    }
+
     useEffect(() => {
-        fetchReviews();
-        fetchShelves();
-    }, []);
+        fetchReviewAndShelf();
+    }, [currentUser]);
+
+    if (loading) return <div>Loading...</div>;
+
     return(
         <div>
             <div className="center-box">
@@ -51,11 +62,11 @@ export default function Home() {
                     <div className="box">
                         <h3>Your Recently Added Books</h3>
                         {!currentUser && <h4>Sign in to view your own recent books added!</h4>}
-                        {shelf.length === 0 ? (<p>No books added yet.</p>) :
+                        {currentUser && shelf.length === 0 ? (<p>No books added yet.</p>) :
                             (shelf.map((book: any) => (
 
                                 <div key={book._id} className="review-entry">
-                                    <h4>User {book.userId?.username || "Unknown"} added "<Link href={`/${book.bookId?._id}/Detail`} className="link"> {book.bookId?.title}</Link>" to "{book.shelf}" shelf on {new Date(book.createdAt).toLocaleDateString()}: </h4>
+                                    <h4>User {book.userId?.username || "Unknown"} added &quot;<Link href={`/${book.bookId?._id}/Detail`} className="link"> {book.bookId?.title}</Link>&quot; to &quot;{book.shelf}&quot; shelf on {new Date(book.createdAt).toLocaleDateString()}: </h4>
                                 </div>
                             )))}
                     </div>
@@ -68,7 +79,7 @@ export default function Home() {
                             (reviews.map((review: any) => (
 
                                 <div key={review._id} className="review-entry">
-                                    <h4>User {review.authorId?.username || "Unknown"} reviewed "<Link href={`/${review.bookId?._id}/Detail`} className="link"> {review.bookId?.title}</Link>" on {new Date(review.createdAt).toLocaleDateString()}: </h4>
+                                    <h4>User {review.authorId?.username || "Unknown"} reviewed &quot; <Link href={`/${review.bookId?._id}/Detail`} className="link"> {review.bookId?.title}</Link> &quot; on {new Date(review.createdAt).toLocaleDateString()}: </h4>
                                     <p>{review.review}</p>
                                 </div>
                                     )))}
