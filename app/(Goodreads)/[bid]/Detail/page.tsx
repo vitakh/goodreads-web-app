@@ -1,141 +1,173 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+"use client";
 import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { addBookToShelf, getBookshelf, addShelfEntry, getBookById, createBook, removeShelfEntry, getSingleBookById } from "../../BookShelf/client";
+import {
+  addBookToShelf,
+  getBookshelf,
+  addShelfEntry,
+  getBookById,
+  createBook,
+  removeShelfEntry,
+  getSingleBookById,
+} from "../../BookShelf/client";
 import axios from "axios";
-import {Button, Form, FormControl, Image} from "react-bootstrap";
+import { Button, Form, FormControl, Image } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { createReview, getAllReviews, getReviewsByBookId, deleteReview, updateReview } from "./client";
+import {
+  createReview,
+  getAllReviews,
+  getReviewsByBookId,
+  deleteReview,
+  updateReview,
+} from "./client";
 import "./styles.css";
 
 export default function Detail() {
-    // TODO: Check if book already exists before adding (avoid error for duplicate books)
-    // TODO: Check if book already exists on shelf to maybe remove/disable button
-    const [status, setStatus] = useState("");
-    const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
-    const [shelfType, setShelfType] = useState("want");
-    const [isOnShelf, setIsOnShelf] = useState(false);
-    const [book, setBook] = useState({
-        id: "",
-        volumeInfo: { title: "", authors: [], description: "", imageLinks: {thumbnail: ""}, categories: [] as string[] }
-    });
-    const {bid} = useParams();
-    const [reviews, setReviews] = useState<any[]>([]);
-    const [newReview, setNewReview] = useState("");
-    const [editReview, setEditReview] = useState(false);
-    const [editReviewContent, setEditReviewContent] = useState("");
+  // TODO: Check if book already exists before adding (avoid error for duplicate books)
+  // TODO: Check if book already exists on shelf to maybe remove/disable button
+  const [status, setStatus] = useState("");
+  const currentUser = useSelector(
+    (state: any) => state.accountReducer.currentUser
+  );
+  const [shelfType, setShelfType] = useState("want");
+  const [isOnShelf, setIsOnShelf] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-    const fetchUserShelves = async () => {
-        if (!currentUser) return;
-        try {
-            const shelvesWithBooks = await getBookshelf(currentUser._id);
+  const [book, setBook] = useState({
+    id: "",
+    volumeInfo: {
+      title: "",
+      authors: [],
+      description: "",
+      imageLinks: { thumbnail: "" },
+      categories: [] as string[],
+    },
+  });
+  const { bid } = useParams();
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [newReview, setNewReview] = useState("");
+  const [editReview, setEditReview] = useState(false);
+  const [editReviewContent, setEditReviewContent] = useState("");
 
-            const existing = shelvesWithBooks.find((entry: any) => entry.book?._id === bid);
-            if (existing) {
-                setIsOnShelf(true);
-                setShelfType(existing.shelf);
-            }
-        } catch (err) {
-            console.error("Error fetching user shelves:", err);
-        }
-    };
+  const fetchUserShelves = async () => {
+    if (!currentUser) return;
+    try {
+      const shelvesWithBooks = await getBookshelf(currentUser._id);
 
-    const fetchBook = async () => {
-        try {
-            const data = await getBookById(bid as string);
-            setBook(data);
-        } catch (err) {
-            console.error("Error fetching book:", err);
-        }
-    };
-
-    const fetchReviews = async () => {
-        try {
-            const data = await getReviewsByBookId(bid as string);
-            setReviews(Array.isArray(data) ? data : []);
-        } catch (err) {
-            console.error("Error fetching reviews:", err);
-            setReviews([]);
-        }
-    };
-
-    useEffect(() => {
-        fetchBook();
-        fetchUserShelves();
-        fetchReviews();
-    }, [bid]);
-    
-    const handleAddToShelf = async () => {
-        if (!currentUser || !book) {
-            setStatus("Please sign in to add books.");
-            return;
-        }
-
-        try {
-            let dbBook = await getSingleBookById(bid as string);
-            console.log("LOG", dbBook);
-            if (!dbBook) {
-                const bookData = {
-                    _id: bid,
-                    title: book.volumeInfo.title,
-                    authors: book.volumeInfo.authors,
-                };
-                dbBook = await createBook(bookData);
-            }
-            await addShelfEntry({
-                userId: currentUser._id,
-                bookId: bid,
-                shelf: shelfType,
-            });
-
-            setStatus(`Book added to '${shelfType}' shelf`);
-        } catch (err) {
-            console.error(err);
-            setStatus("Error adding book to shelf.");
-        }
-    };
-
-    const handleRemoveFromShelf = async () => {
-        if (!currentUser) return;
-
-        try {
-            await removeShelfEntry(currentUser._id, bid as string);
-            setIsOnShelf(false);
-            setStatus("Book removed from your shelf");
-        } catch (err) {
-            console.error(err);
-            setStatus("Error removing book from shelf.");
-        }
-    };
-
-    const handlePostReview = async () => {
-    if (!currentUser) {
-        alert("Please sign in to post a review.")
-        redirect("/Account/Signin");
+      const existing = shelvesWithBooks.find(
+        (entry: any) => entry.book?._id === bid
+      );
+      if (existing) {
+        setIsOnShelf(true);
+        setShelfType(existing.shelf);
+      }
+    } catch (err) {
+      console.error("Error fetching user shelves:", err);
     }
+  };
 
-    if (newReview.trim().length === 0) {
-        alert("Review cannot be empty.");
-        return;
+  const fetchBook = async () => {
+    try {
+      const data = await getBookById(bid as string);
+      setBook(data);
+    } catch (err) {
+      console.error("Error fetching book:", err);
+    }
+  };
+
+  const fetchReviews = async () => {
+    try {
+      const data = await getReviewsByBookId(bid as string);
+      setReviews(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+      setReviews([]);
+    }
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    await fetchBook();
+    await fetchUserShelves();
+    await fetchReviews();
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [bid]);
+
+  const handleAddToShelf = async () => {
+    if (!currentUser || !book) {
+      setStatus("Please sign in to add books.");
+      return;
     }
 
     try {
-        await createReview({
-            review: newReview,
-            bookId: bid,
-            authorId: currentUser._id,
-        });
+      let dbBook = await getSingleBookById(bid as string);
+      console.log("LOG", dbBook);
+      if (!dbBook) {
+        const bookData = {
+          _id: bid,
+          title: book.volumeInfo.title,
+          authors: book.volumeInfo.authors,
+        };
+        dbBook = await createBook(bookData);
+      }
+      await addShelfEntry({
+        userId: currentUser._id,
+        bookId: bid,
+        shelf: shelfType,
+      });
 
-        setNewReview("");
-        console.log("Review added.");
-        await fetchReviews();
+      setStatus(`Book added to '${shelfType}' shelf`);
     } catch (err) {
-        console.error(err);
+      console.error(err);
+      setStatus("Error adding book to shelf.");
     }
-};
+  };
 
- const handleDeleteReview = async (reviewId: string) => {
+  const handleRemoveFromShelf = async () => {
+    if (!currentUser) return;
+
+    try {
+      await removeShelfEntry(currentUser._id, bid as string);
+      setIsOnShelf(false);
+      setStatus("Book removed from your shelf");
+    } catch (err) {
+      console.error(err);
+      setStatus("Error removing book from shelf.");
+    }
+  };
+
+  const handlePostReview = async () => {
+    if (!currentUser) {
+      alert("Please sign in to post a review.");
+      redirect("/Account/Signin");
+    }
+
+    if (newReview.trim().length === 0) {
+      alert("Review cannot be empty.");
+      return;
+    }
+
+    try {
+      await createReview({
+        review: newReview,
+        bookId: bid,
+        authorId: currentUser._id,
+      });
+
+      setNewReview("");
+      console.log("Review added.");
+      await fetchReviews();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDeleteReview = async (reviewId: string) => {
     await deleteReview(reviewId);
     await fetchReviews();
   };
@@ -145,104 +177,146 @@ export default function Detail() {
     await fetchReviews();
   };
 
-    const info = book.volumeInfo;
-    const html = info.description;
-    const text = html.replace(/<[^>]*>/g, "").trim();
-    return(
-        <div>
-        <div className="center-box">
-            <div className="center-box-inner">
-                <h1>Book Details:</h1>
-                <div className="book-details-row">
-                    <div className="book-details-image mb-3">
-                        <Image
-                            src={info.imageLinks?.thumbnail || "/noimage.png"}
-                            alt={info.title || "No Title"}
-                            thumbnail
-                            fluid
-                            height={250}
-                        />
-                    </div>
+  const info = book.volumeInfo;
+  const html = info.description;
+  const text = html.replace(/<[^>]*>/g, "").trim();
 
-                    <div className="book-details-info">
-                        <h2>{info.title}</h2>
-                        <p className="text-muted">By: {info.authors?.join(", ")}</p>
-                        <p>{text}</p>
-                        {info.categories && info.categories.length > 0 && (
-                            <p>
-                                <strong>Genres:</strong> {info.categories.join(", ")}
-                            </p>
-                        )}
-                        {isOnShelf ? (
-                            <button onClick={handleRemoveFromShelf}>Remove from Shelf</button>
-                        ) : (
-                            <div>
-                                <select className="signup-select" value={shelfType} onChange={(e) => setShelfType(e.target.value as any)}>
-                                    <option value="" disabled>
-                                        -- Select a Shelf Type --
-                                    </option>
-                                    <option value="want">Want</option>
-                                    <option value="reading">Reading</option>
-                                    <option value="read">Read</option>
-                                </select>
-
-                                <button onClick={handleAddToShelf}>Add to Shelf</button>
-                            </div>
-                        )}
-
-                        {status && <p>{status}</p>}
-                    </div>
-                </div>
-            </div>
-        </div>
-    <div className="center-box">
+  if (loading) return <div>Loading...</div>;
+  return (
+    <div>
+      <div className="center-box">
         <div className="center-box-inner">
-            <h1>Reviews:</h1>
-            {currentUser ? (
+          <h1>Book Details:</h1>
+          <div className="book-details-row">
+            <div className="book-details-image mb-3">
+              <Image
+                src={info.imageLinks?.thumbnail || "/noimage.png"}
+                alt={info.title || "No Title"}
+                thumbnail
+                fluid
+                height={250}
+              />
+            </div>
+
+            <div className="book-details-info">
+              <h2>{info.title}</h2>
+              <p className="text-muted">By: {info.authors?.join(", ")}</p>
+              <p>{text}</p>
+              {info.categories && info.categories.length > 0 && (
+                <p>
+                  <strong>Genres:</strong> {info.categories.join(", ")}
+                </p>
+              )}
+              {isOnShelf ? (
+                <button onClick={handleRemoveFromShelf}>
+                  Remove from Shelf
+                </button>
+              ) : (
                 <div>
-                    <Form.Group>
-                        <Form.Label htmlFor="review-input" className="review-input">What did you think?</Form.Label>
-                        <Form.Control id="review-input" type="text" value={newReview} onChange={(e) => setNewReview(e.target.value)} as="textarea" rows={3} placeholder="Enter your review" />
-                    </Form.Group>
-                    <button onClick={handlePostReview}>Post Review</button>
+                  <select
+                    className="signup-select"
+                    value={shelfType}
+                    onChange={(e) => setShelfType(e.target.value as any)}
+                  >
+                    <option value="" disabled>
+                      -- Select a Shelf Type --
+                    </option>
+                    <option value="want">Want</option>
+                    <option value="reading">Reading</option>
+                    <option value="read">Read</option>
+                  </select>
+
+                  <button onClick={handleAddToShelf}>Add to Shelf</button>
                 </div>
-            ) : (
-                <div>
-                    <p>Please sign in to leave a review.</p>
-                </div>
-            )}
-            {reviews.length === 0 ? (<p>No reviews yet.</p>) : 
-            (reviews.map((review: any) => (
-                <div key={review._id} className="review-entry">
-                                <h4>{review.author?.username || "Unknown"}</h4>
-                                <small className="text-muted">{new Date(review.createdAt).toLocaleDateString()}</small>
-                                {!editReview ? <p>{review.review}</p> : (
-                                    <div>
-                                        <FormControl as="textarea" rows={3} value={editReviewContent} onChange={(e) => setEditReviewContent(e.target.value)} />
-                                        <Button onClick={async () => {
-                                            await handleEditReview(review._id, editReviewContent);
-                                            setEditReview(false);
-                                        }}>Save</Button>
-                                        <Button onClick={() => setEditReview(false)}>Cancel</Button>
-                                    </div>
-                                )
-                                }
-                                {
-                                    currentUser && (currentUser._id === review.authorId || currentUser.role === "ADMIN") && !editReview && (
-                                        <div>
-                                            <Button onClick={() => {setEditReview(true); setEditReviewContent(review.review)}}>Edit review</Button>
-                                            <Button className="btn-delete-review" onClick={() => handleDeleteReview(review._id)}>Delete review</Button>
-                                        </div>
-                                    )
-                                }
-                                
-                               
-                </div>
-            )))}
-            
+              )}
+
+              {status && <p>{status}</p>}
+            </div>
+          </div>
         </div>
+      </div>
+      <div className="center-box">
+        <div className="center-box-inner">
+          <h1>Reviews:</h1>
+          {currentUser ? (
+            <div>
+              <Form.Group>
+                <Form.Label htmlFor="review-input" className="review-input">
+                  What did you think?
+                </Form.Label>
+                <Form.Control
+                  id="review-input"
+                  type="text"
+                  value={newReview}
+                  onChange={(e) => setNewReview(e.target.value)}
+                  as="textarea"
+                  rows={3}
+                  placeholder="Enter your review"
+                />
+              </Form.Group>
+              <button onClick={handlePostReview}>Post Review</button>
+            </div>
+          ) : (
+            <div>
+              <p>Please sign in to leave a review.</p>
+            </div>
+          )}
+          {reviews.length === 0 ? (
+            <p>No reviews yet.</p>
+          ) : (
+            reviews.map((review: any) => (
+              <div key={review._id} className="review-entry">
+                <h4>{review.author?.username || "Unknown"}</h4>
+                <small className="text-muted">
+                  {new Date(review.createdAt).toLocaleDateString()}
+                </small>
+                {!editReview ? (
+                  <p>{review.review}</p>
+                ) : (
+                  <div>
+                    <FormControl
+                      as="textarea"
+                      rows={3}
+                      value={editReviewContent}
+                      onChange={(e) => setEditReviewContent(e.target.value)}
+                    />
+                    <Button
+                      onClick={async () => {
+                        await handleEditReview(review._id, editReviewContent);
+                        setEditReview(false);
+                      }}
+                    >
+                      Save
+                    </Button>
+                    <Button onClick={() => setEditReview(false)}>Cancel</Button>
+                  </div>
+                )}
+                {currentUser &&
+                  (currentUser._id === review.authorId ||
+                    currentUser.role === "ADMIN") &&
+                  !editReview && (
+                    <div>
+                      <Button
+                        onClick={() => {
+                          setEditReview(true);
+                          setEditReviewContent(review.review);
+                        }}
+                      >
+                        Edit review
+                      </Button>
+                      <Button
+                        className="btn-delete-review"
+                        onClick={() => handleDeleteReview(review._id)}
+                      >
+                        Delete review
+                      </Button>
+                    </div>
+                  )}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
-        </div>
-    );
+  );
 }
-// TODO: make a handle edit review

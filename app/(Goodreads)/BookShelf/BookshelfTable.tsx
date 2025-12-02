@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+import { Image } from "react-bootstrap";
 import React from "react";
 import Link from "next/link";
 export default function BookshelfTable({ bookshelf }: { bookshelf: any[] }) {
@@ -20,11 +22,10 @@ export default function BookshelfTable({ bookshelf }: { bookshelf: any[] }) {
                 {bookshelf.map((item: any) => (
                     <tr key={item.bookId}>
                         <td>
-                            {/*<img*/}
-                            {/*    src={item.book.coverImageUrl || "/noimage.png"}*/}
-                            {/*    alt={item.book.title || "No title"}*/}
-                            {/*    style={{ width: "60px", height: "90px", objectFit: "cover" }}*/}
-                            {/*/>*/}
+                            <Image
+                            src={item.book.thumbnail || "/noimage.png"}
+                            alt={item.book.title || "No title"}
+                            style={{ width: "60px", height: "90px", objectFit: "cover" }}/>
                         </td>
                         <td>
                             <Link href={`/${item.book._id}/Detail`} className="link">
