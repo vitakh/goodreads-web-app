@@ -16,6 +16,6 @@ export default function Users() {
         fetchUsers();
     }, []);
     return (
-        <UserTable users={users} fetchUsers={fetchUsers} removeUser={removeUser}/>
+        <UserTable users={users} removeUser={removeUser}/>
     );
 }

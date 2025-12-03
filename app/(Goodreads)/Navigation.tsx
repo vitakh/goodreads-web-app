@@ -15,6 +15,7 @@ export default function GoodreadsNavigation() {
     ];
     if (currentUser?.role === "ADMIN") {
         links.push({ label: "Users", path: "/Admin/Users" });
+        links.push({ label: "Requests", path: "/Admin/Requests" });
     }
     return (
         <ListGroup className="navbar-container">

@@ -48,3 +48,12 @@ export const deleteUser = async (userId: string) => {
     const response = await axiosWithCredentials.delete(`${USERS_API}/${userId}`);
     return response.data;
 };
+export const updateAuthBooks = async (userId: string, book: { bookId: string; title: string }) => {
+    const response = await axiosWithCredentials.put(`${USERS_API}/${userId}/authBooks`, { book });
+    return response.data;
+};
+
+export const findAuthorById = async (bookId: string) => {
+    const response = await axiosWithCredentials.get(`${USERS_API}/${bookId}/author`);
+    return response.data;
+};

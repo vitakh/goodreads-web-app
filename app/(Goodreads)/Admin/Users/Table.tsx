@@ -1,6 +1,7 @@
 import { FaUserCircle } from "react-icons/fa";
 import "../../BookShelf/styles.css";
-export default function UserTable({ users = [], fetchUsers, removeUser }: { users?: any[]; fetchUsers: () => void; removeUser: (userId: string) => void;}) {
+import Link from "next/link";
+export default function UserTable({ users = [], removeUser }: { users?: any[]; removeUser: (userId: string) => void;}) {
     return(
         <table className="table table-striped table-bordered bookshelf-table">
             <thead>
@@ -18,7 +19,11 @@ export default function UserTable({ users = [], fetchUsers, removeUser }: { user
                     <tr key={user._id}>
                         <td>{user.firstName || "Not Inputted"}</td>
                         <td>{user.lastName || "Not Inputted"}</td>
-                        <td>{user.username}</td>
+                        <td>
+                            <Link href={`/Account/Profile?userId=${user._id}`} className="link">
+                                {user.username}
+                            </Link>
+                        </td>
                         <td>{user.role}</td>
                         <td>
                             <button className="btn btn-danger btn-sm"
