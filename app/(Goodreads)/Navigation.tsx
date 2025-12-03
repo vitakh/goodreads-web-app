@@ -2,7 +2,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import {RootState} from "./store";
 export default function GoodreadsNavigation() {
+    const { currentUser } = useSelector((state: RootState) => state.accountReducer);
     const pathname = usePathname();
     const links = [
         {label: "Home", path: "/Home"},
@@ -10,6 +13,9 @@ export default function GoodreadsNavigation() {
         {label: "Search", path: "/Search"},
         {label: "Profile", path: "/Account/Profile"},
     ];
+    if (currentUser?.role === "ADMIN") {
+        links.push({ label: "Users", path: "/Admin/Users" });
+    }
     return (
         <ListGroup className="navbar-container">
             {links.map((link)=> (

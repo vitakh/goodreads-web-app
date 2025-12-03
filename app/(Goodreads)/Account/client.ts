@@ -40,3 +40,11 @@ export const publicProfile = async (userId: string) => {
     console.log("Public profile response:", response.data);
     return response.data;
 };
+export const findAllUsers = async () => {
+    const response = await axiosWithCredentials.get(`${USERS_API}`);
+    return response.data;
+};
+export const deleteUser = async (userId: string) => {
+    const response = await axiosWithCredentials.delete(`${USERS_API}/${userId}`);
+    return response.data;
+};
