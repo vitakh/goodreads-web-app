@@ -7,6 +7,21 @@ import {findRecentReviews, getAllReviews, findRecentReviewUser} from "../[bid]/D
 import { useEffect, useState } from "react";
 import {getBookById, findRecentShelf, findRecentShelfUser} from "../BookShelf/client";
 
+// Helper components for cleaner code
+const UserLink = ({ userId, username }: { userId: string; username: string }) => (
+    <Link href={`/Account/Profile?userId=${userId}`} className="link">
+        {username || "Unknown"}
+    </Link>
+);
+
+const BookLink = ({ bookId, title }: { bookId: string; title: string }) => (
+    <Link href={`/${bookId}/Detail`} className="link">
+        {title}
+    </Link>
+);
+
+const formatDate = (date: string) => new Date(date).toLocaleDateString();
+
 export default function Home() {
     const [reviews, setReviews] = useState([]);
     const [shelf, setShelf] = useState([]);
@@ -64,9 +79,12 @@ export default function Home() {
                         {!currentUser && <h4>Sign in to view your own recent books added!</h4>}
                         {currentUser && shelf.length === 0 ? (<p>No books added yet.</p>) :
                             (shelf.map((book: any) => (
-
                                 <div key={book._id} className="review-entry">
-                                    <h4>User {book.userId?.username || "Unknown"} added &quot;<Link href={`/${book.bookId?._id}/Detail`} className="link"> {book.bookId?.title}</Link>&quot; to &quot;{book.shelf}&quot; shelf on {new Date(book.createdAt).toLocaleDateString()}: </h4>
+                                    <h4>
+                                        User <UserLink userId={book.userId?._id} username={book.userId?.username} /> added 
+                                        &quot;<BookLink bookId={book.bookId?._id} title={book.bookId?.title} />&quot; 
+                                        to &quot;{book.shelf}&quot; shelf on {formatDate(book.createdAt)}
+                                    </h4>
                                 </div>
                             )))}
                     </div>
@@ -77,12 +95,15 @@ export default function Home() {
                         {!currentUser && <h4>Sign in to view your own recent reviews!</h4>}
                         {reviews.length === 0 ? (<p>No reviews yet.</p>) :
                             (reviews.map((review: any) => (
-
                                 <div key={review._id} className="review-entry">
-                                    <h4>User {review.authorId?.username || "Unknown"} reviewed &quot; <Link href={`/${review.bookId?._id}/Detail`} className="link"> {review.bookId?.title}</Link> &quot; on {new Date(review.createdAt).toLocaleDateString()}: </h4>
+                                    <h4>
+                                        User <UserLink userId={review.authorId?._id} username={review.authorId?.username} /> reviewed 
+                                        &quot;<BookLink bookId={review.bookId?._id} title={review.bookId?.title} />&quot; 
+                                        on {formatDate(review.createdAt)}
+                                    </h4>
                                     <p>{review.review}</p>
                                 </div>
-                                    )))}
+                            )))}
                     </div>
                 </div>
             </div>
