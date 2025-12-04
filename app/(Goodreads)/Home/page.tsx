@@ -82,7 +82,7 @@ export default function Home() {
                                 <div key={book._id} className="review-entry">
                                     <h4>
                                         User <UserLink userId={book.userId?._id} username={book.userId?.username} /> added 
-                                        &quot;<BookLink bookId={book.bookId?._id} title={book.bookId?.title} />&quot; 
+                                        &quot;<BookLink bookId={book.bookId?._id} title={book.bookId?.title} />&quot;
                                         to &quot;{book.shelf}&quot; shelf on {formatDate(book.createdAt)}
                                     </h4>
                                 </div>
@@ -98,7 +98,7 @@ export default function Home() {
                                 <div key={review._id} className="review-entry">
                                     <h4>
                                         User <UserLink userId={review.authorId?._id} username={review.authorId?.username} /> reviewed 
-                                        &quot;<BookLink bookId={review.bookId?._id} title={review.bookId?.title} />&quot; 
+                                        &quot;<BookLink bookId={review.bookId?._id} title={review.title} />&quot;
                                         on {formatDate(review.createdAt)}
                                     </h4>
                                     <p>{review.review}</p>

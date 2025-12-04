@@ -165,6 +165,7 @@ export default function Detail() {
     try {
       await createReview({
         review: newReview,
+          title: book.volumeInfo.title,
         bookId: bid,
         authorId: currentUser._id,
       });
