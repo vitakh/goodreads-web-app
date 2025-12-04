@@ -51,8 +51,8 @@ export default function Detail() {
   const { bid } = useParams();
   const [reviews, setReviews] = useState<any[]>([]);
   const [newReview, setNewReview] = useState("");
-  const [editReview, setEditReview] = useState(false);
   const [editReviewContent, setEditReviewContent] = useState("");
+  const [editReviewId, setEditReviewId] = useState("");
 
   const fetchUserShelves = async () => {
     if (!currentUser) return;
@@ -298,6 +298,7 @@ export default function Detail() {
                 </Form.Label>
                 <Form.Control
                   id="review-input"
+                  className="review-textarea"
                   type="text"
                   value={newReview}
                   onChange={(e) => setNewReview(e.target.value)}
@@ -306,7 +307,7 @@ export default function Detail() {
                   placeholder="Enter your review"
                 />
               </Form.Group>
-              <button onClick={handlePostReview}>Post Review</button>
+              <button className="btn-post-review" onClick={handlePostReview}>Post Review</button>
             </div>
           ) : (
             <div>
@@ -318,11 +319,15 @@ export default function Detail() {
           ) : (
             reviews.map((review: any) => (
               <div key={review._id} className="review-entry">
+                <div className="review-user-info"> 
                 <h4>{review.author?.username || "Unknown"}</h4>
                 <small className="text-muted">
                   {new Date(review.createdAt).toLocaleDateString()}
                 </small>
-                {!editReview ? (
+                </div>
+
+                <div className="review-content">
+                {editReviewId !== review._id ? (
                   <p>{review.review}</p>
                 ) : (
                   <div>
@@ -333,24 +338,26 @@ export default function Detail() {
                       onChange={(e) => setEditReviewContent(e.target.value)}
                     />
                     <Button
+                    className="btn-save-review"
                       onClick={async () => {
                         await handleEditReview(review._id, editReviewContent);
-                        setEditReview(false);
+                        setEditReviewId("");
                       }}
                     >
                       Save
                     </Button>
-                    <Button onClick={() => setEditReview(false)}>Cancel</Button>
+                    <Button className="btn-cancel-review" onClick={() => setEditReviewId("")}>Cancel</Button>
                   </div>
                 )}
                 {currentUser &&
                   (currentUser._id === review.authorId ||
                     currentUser.role === "ADMIN") &&
-                  !editReview && (
+                  editReviewId !== review._id && (
                     <div>
                       <Button
+                        className="btn-edit-review"
                         onClick={() => {
-                          setEditReview(true);
+                          setEditReviewId(review._id);
                           setEditReviewContent(review.review);
                         }}
                       >
@@ -364,6 +371,7 @@ export default function Detail() {
                       </Button>
                     </div>
                   )}
+              </div>
               </div>
             ))
           )}

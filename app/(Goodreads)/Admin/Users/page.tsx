@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import * as client from "../../Account/client";
 import { useState, useEffect } from "react";
 import UserTable from "./Table";
+import { useSelector } from "react-redux";
 export default function Users() {
     const [users, setUsers] = useState<any[]>([]);
+    const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
+    
     const fetchUsers = async () => {
         const users = await client.findAllUsers();
         setUsers(users);
@@ -16,6 +20,6 @@ export default function Users() {
         fetchUsers();
     }, []);
     return (
-        <UserTable users={users} removeUser={removeUser}/>
+        <UserTable users={users} removeUser={removeUser} currentUser={currentUser}/>
     );
 }
