@@ -65,7 +65,7 @@ export default function PrivateProfile({
                         {reviews.map((review: any) => (
                             <div key={review._id} className="profile-section mt-3">
                                 <FormLabel>Book Name:</FormLabel>
-                                <FormControl value={review.bookId?.title} disabled className="mb-2" />
+                                <FormControl value={review.title} disabled className="mb-2" />
                                 <FormLabel>Review:</FormLabel>
                                 <FormControl as="textarea" rows={2} value={review.review} disabled />
                             </div>
