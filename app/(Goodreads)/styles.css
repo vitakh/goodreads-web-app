@@ -45,7 +45,6 @@ input[type="password"]
     padding: 12px 14px;
     margin: 8px 0;
     border-radius: 8px;
-    /* border-color: cornflowerblue; */
     font-size: 16px;
     background-color: #fff;
 }
@@ -248,4 +247,11 @@ a {
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid #e6ccb2;
+}
+
+.footer {
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    color: #5a3e1b;
 }
