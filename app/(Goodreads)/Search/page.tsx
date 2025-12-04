@@ -10,12 +10,15 @@ import {
   Image,
   ListGroupItem,
 } from "react-bootstrap";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const searchBooks = async () => {
+  const searchBooks = async (searchTerm: string, push: boolean) => {
     try {
       if (searchTerm.trim() === "") return;
 
@@ -28,22 +31,21 @@ export default function Search() {
       setResults(resData);
       localStorage.setItem("searchTerm", searchTerm);
       localStorage.setItem("searchResults", JSON.stringify(resData));
+      if (push) router.push(`/Search?query=${encodeURIComponent(searchTerm)}`);
     } catch (error) {
       console.log("Error searching books: ", error);
     }
   };
 
   useEffect(() => {
-    const savedSearchTerm = localStorage.getItem("searchTerm");
-    const savedResults = localStorage.getItem("searchResults");
-
-    if (savedSearchTerm) {
-      setSearchTerm(savedSearchTerm);
+    const query = searchParams.get("query");
+    if (query) {
+      setSearchTerm(query);
+      searchBooks(query, false);
+    } else {
+      setResults([]);
     }
-    if (savedResults) {
-      setResults(JSON.parse(savedResults));
-    }
-  }, []);
+  }, [searchParams]);
 
 
 
@@ -62,7 +64,7 @@ export default function Search() {
           />
           <Button
             onClick={() => {
-              searchBooks();
+              searchBooks(searchTerm, true);
             }}
             className="wd-search-btn"
           >
