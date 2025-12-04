@@ -2,7 +2,7 @@
 "use client";
 import axios from "axios";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   FormControl,
@@ -24,11 +24,28 @@ export default function Search() {
           process.env.NEXT_PUBLIC_HTTP_SERVER
         }/api/books/search?query=${encodeURIComponent(searchTerm)}`
       );
-      setResults(res.data.items || []);
+      const resData = res.data.items || [];
+      setResults(resData);
+      localStorage.setItem("searchTerm", searchTerm);
+      localStorage.setItem("searchResults", JSON.stringify(resData));
     } catch (error) {
       console.log("Error searching books: ", error);
     }
   };
+
+  useEffect(() => {
+    const savedSearchTerm = localStorage.getItem("searchTerm");
+    const savedResults = localStorage.getItem("searchResults");
+
+    if (savedSearchTerm) {
+      setSearchTerm(savedSearchTerm);
+    }
+    if (savedResults) {
+      setResults(JSON.parse(savedResults));
+    }
+  }, []);
+
+
 
   return (
     <div className="center-box">

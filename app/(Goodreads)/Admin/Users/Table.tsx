@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FaUserCircle } from "react-icons/fa";
 import "../../BookShelf/styles.css";
 import Link from "next/link";
