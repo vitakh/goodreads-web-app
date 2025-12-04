@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { FormControl, FormLabel } from "react-bootstrap";
-
+import Link from "next/link";
 export default function PublicProfile({
     profile,
     reviews,
@@ -22,6 +22,18 @@ export default function PublicProfile({
                 <FormControl className="mb-2" value={profile.role} disabled />
                 <FormLabel> Last Activity: </FormLabel>
                 <FormControl className="mb-2" value={profile.lastActivity || "N/A"} disabled />
+                {profile?.role == "AUTHOR" && !(profile.authBooks?.length === 0) &&
+                    <FormLabel>
+                        <p>Authored Books: </p>
+                        <ul>
+                            {profile.authBooks?.map((book : any) => (
+                                <Link href={`/${book.bookId}/Detail`} className="link">
+                                    <li key={book.bookId}>{book.title}</li>
+                                </Link>
+                            ))}
+                        </ul>
+                    </FormLabel>
+                }
             </div>
 
             {/* Reviews Section */}

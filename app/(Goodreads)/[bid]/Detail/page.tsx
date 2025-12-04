@@ -2,6 +2,7 @@
 "use client";
 import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   addBookToShelf,
   getBookshelf,
@@ -11,6 +12,7 @@ import {
   removeShelfEntry,
   getSingleBookById,
 } from "../../BookShelf/client";
+import { findAuthorById } from "../../Account/client";
 import axios from "axios";
 import { Button, Form, FormControl, Image } from "react-bootstrap";
 import { useSelector } from "react-redux";
@@ -20,21 +22,23 @@ import {
   getReviewsByBookId,
   deleteReview,
   updateReview,
+    createRequest,
 } from "./client";
 import "./styles.css";
 
 export default function Detail() {
-  // TODO: Check if book already exists before adding (avoid error for duplicate books)
-  // TODO: Check if book already exists on shelf to maybe remove/disable button
   const [status, setStatus] = useState("");
   const currentUser = useSelector(
     (state: any) => state.accountReducer.currentUser
   );
   const [shelfType, setShelfType] = useState("want");
+  const [author, setAuthor] = useState({} as any);
   const [isOnShelf, setIsOnShelf] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [requested, setRequested] = useState(false);
 
-  const [book, setBook] = useState({
+
+    const [book, setBook] = useState({
     id: "",
     volumeInfo: {
       title: "",
@@ -93,9 +97,15 @@ export default function Detail() {
     await fetchReviews();
     setLoading(false);
   }
+  const fetchAuthors = async () => {
+      const user = await findAuthorById(bid as string);
+      setAuthor(user);
+      console.log(user);
+  }
 
   useEffect(() => {
     fetchData();
+    fetchAuthors();
   }, [bid]);
 
   const handleAddToShelf = async () => {
@@ -177,12 +187,30 @@ export default function Detail() {
     await fetchReviews();
   };
 
+    const handlePostRequest = async () => {
+        if (!currentUser) {
+            alert("Please sign in to claim a book.");
+            redirect("/Account/Signin");
+        }
+
+        try {
+            await createRequest({
+                userId: currentUser._id,
+                bookId: bid,
+                title: book.volumeInfo.title,
+            });
+            setRequested(true);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
   const info = book.volumeInfo;
   const html = info.description;
   const text = html.replace(/<[^>]*>/g, "").trim();
 
   if (loading) return <div>Loading...</div>;
-  return (
+    return (
     <div>
       <div className="center-box">
         <div className="center-box-inner">
@@ -207,6 +235,15 @@ export default function Detail() {
                   <strong>Genres:</strong> {info.categories.join(", ")}
                 </p>
               )}
+                {author &&
+                    <div>
+                        <p>Registered Author Account:
+                        <Link href={`/Account/Profile?userId=${author._id}`} className="link">
+                           <span> {author.firstName} {author.lastName}</span><br />
+                        </Link>
+                        </p>
+                    </div>
+                }
               {isOnShelf ? (
                 <button onClick={handleRemoveFromShelf}>
                   Remove from Shelf
@@ -231,6 +268,21 @@ export default function Detail() {
               )}
 
               {status && <p>{status}</p>}
+                {currentUser?.role == "AUTHOR" && !currentUser.authBooks.includes(bid) &&
+                    <div>
+                    {requested ? (
+                            <button>
+                                Author Claim Request Pending
+                            </button>
+                        ) : (
+                            <div>
+                                <button onClick={handlePostRequest}>
+                                    Claim Book as Author
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                }
             </div>
           </div>
         </div>

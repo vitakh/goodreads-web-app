@@ -2,7 +2,6 @@
 "use client";
 import { Button, FormControl, FormLabel } from "react-bootstrap";
 import Link from "next/link";
-
 export default function PrivateProfile({
     profile,
     setProfile,
@@ -41,7 +40,20 @@ export default function PrivateProfile({
                              defaultValue={profile.email}
                              onChange={(e) => setProfile({ ...profile, email: e.target.value })} />
                 <FormLabel> Role: {profile.role}</FormLabel>
+                {profile?.role == "AUTHOR" &&
+                    <FormLabel>
+                        <p>Authored Books: </p>
+                        <ul>
+                            {profile.authBooks?.map((book : any) => (
+                                <Link href={`/${book.bookId}/Detail`} className="link">
+                                    <li key={book._id}>{book.title}</li>
+                                </Link>
+                            ))}
+                        </ul>
+                    </FormLabel>
+                }
             </div>
+            <Button onClick={updateProfile} className="btn btn-primary w-100 mb-2 mt-3"> Update </Button>
 
             {/* Reviews Section */}
             <div className="profile-section mt-4">
@@ -86,8 +98,6 @@ export default function PrivateProfile({
                     <Button variant="outline-primary" className="mt-3">View All</Button>
                 </Link>
             </div>
-
-            <Button onClick={updateProfile} className="btn btn-primary w-100 mb-2 mt-3"> Update </Button>
             <Button onClick={signout} className="w-100 mb-2" id="wd-signout-btn">
                 Sign out
             </Button>
