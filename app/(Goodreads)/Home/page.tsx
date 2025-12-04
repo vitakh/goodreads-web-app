@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import {findRecentReviews, getAllReviews, findRecentReviewUser} from "../[bid]/Detail/client";
 import { useEffect, useState } from "react";
 import {getBookById, findRecentShelf, findRecentShelfUser} from "../BookShelf/client";
+import Footer from "../Footer";
 
 // Helper components for cleaner code
 const UserLink = ({ userId, username }: { userId: string; username: string }) => (
@@ -107,6 +108,11 @@ export default function Home() {
                     </div>
                 </div>
             </div>
+            {/* <div className="center-box"> */}
+                {/* <div className="center-box-inner"> */}
+                    <Footer />
+                {/* </div> */}
+            {/* </div> */}
         </div>
     );
 }
