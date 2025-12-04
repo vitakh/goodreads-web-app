@@ -17,8 +17,8 @@ export default function UserTable({ users = [], removeUser }: { users?: any[]; r
             {users
                 .map((user) => (
                     <tr key={user._id}>
-                        <td>{user.firstName || "Not Inputted"}</td>
-                        <td>{user.lastName || "Not Inputted"}</td>
+                        <td>{user.firstName || "No First Name"}</td>
+                        <td>{user.lastName || "No Last Name"}</td>
                         <td>
                             <Link href={`/Account/Profile?userId=${user._id}`} className="link">
                                 {user.username}
