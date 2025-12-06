@@ -73,7 +73,9 @@ export default function Detail() {
 
   const fetchBook = async () => {
     try {
+      console.log("Fetching book with ID:", bid);
       const data = await getBookById(bid as string);
+      console.log("Fetched book data:", data);
       setBook(data);
     } catch (err) {
       console.error("Error fetching book:", err);
@@ -131,6 +133,7 @@ export default function Detail() {
         shelf: shelfType,
       });
 
+      setIsOnShelf(true);
       setStatus(`Book added to '${shelfType}' shelf`);
     } catch (err) {
       console.error(err);
@@ -139,14 +142,18 @@ export default function Detail() {
   };
 
   const handleRemoveFromShelf = async () => {
+    console.log("handleRemoveFromShelf called");
+    console.log("bid:", bid);
     if (!currentUser) return;
 
     try {
-      await removeShelfEntry(currentUser._id, bid as string);
+      console.log("Calling removeShelfEntry...");
+      const result = await removeShelfEntry(currentUser._id, bid as string);
+      console.log("removeShelfEntry result:", result);
       setIsOnShelf(false);
       setStatus("Book removed from your shelf");
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      console.error("Error in removeShelfEntry:", err);
       setStatus("Error removing book from shelf.");
     }
   };
@@ -207,8 +214,10 @@ export default function Detail() {
     };
 
   const info = book.volumeInfo;
+  console.log("Book info:", info);
+  console.log("Full book object:", book);
   const html = info.description;
-  const text = html.replace(/<[^>]*>/g, "").trim();
+  const text = html ? html.replace(/<[^>]*>/g, "").trim() : "No Description";
 
   if (loading) return <div>Loading...</div>;
     return (

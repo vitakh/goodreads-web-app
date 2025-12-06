@@ -4,6 +4,7 @@ import { Image } from "react-bootstrap";
 import React from "react";
 import Link from "next/link";
 export default function BookshelfTable({ bookshelf }: { bookshelf: any[] }) {
+    console.log("Bookshelf data:", bookshelf);
     return (
         <table className="table table-striped table-bordered bookshelf-table">
             <thead className="table-light">
@@ -16,7 +17,7 @@ export default function BookshelfTable({ bookshelf }: { bookshelf: any[] }) {
             </thead>
             <tbody>
                 {bookshelf.map((item: any) => (
-                    <tr key={item.bookId}>
+                    <tr key={item.book._id}>
                         <td>
                             <Link href={`/${item.book._id}/Detail`} className="link">
                                 {item.book.title}
