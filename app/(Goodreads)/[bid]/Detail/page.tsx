@@ -17,12 +17,13 @@ import axios from "axios";
 import { Button, Form, FormControl, Image } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import {
-  createReview,
+    createReview,
   getAllReviews,
   getReviewsByBookId,
   deleteReview,
   updateReview,
     createRequest,
+    getAllRequests,
 } from "./client";
 import "./styles.css";
 
@@ -97,6 +98,7 @@ export default function Detail() {
     await fetchBook();
     await fetchUserShelves();
     await fetchReviews();
+    await fetchRequests();
     setLoading(false);
   }
   const fetchAuthors = async () => {
@@ -105,10 +107,28 @@ export default function Detail() {
       console.log(user);
   }
 
+  // fetchData and fetchAuthors are intentionally invoked when `bid` or `currentUser` changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchData();
     fetchAuthors();
-  }, [bid]);
+  }, [bid, currentUser]);
+
+  const fetchRequests = async () => {
+    if (!currentUser) return;
+    try {
+      const data = await getAllRequests();
+      if (!Array.isArray(data)) return;
+      const exists = data.find((req: any) => {
+        const reqUserId = typeof req.userId === "string" ? req.userId : req.userId?._id;
+        const reqBookId = typeof req.bookId === "string" ? req.bookId : req.bookId?._id;
+        return reqUserId === currentUser._id && reqBookId === bid;
+      });
+      setRequested(Boolean(exists));
+    } catch (err) {
+      console.error("Error fetching requests:", err);
+    }
+  }
 
   const handleAddToShelf = async () => {
     if (!currentUser || !book) {

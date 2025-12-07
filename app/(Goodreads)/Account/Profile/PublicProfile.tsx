@@ -65,7 +65,7 @@ export default function PublicProfile({
                         {bookshelf.map((book: any) => (
                             <div key={book._id} className="profile-section mt-3">
                                 <FormLabel>Book Name:</FormLabel>
-                                <FormControl value={book.title || "Book"} disabled className="mb-2" />
+                                <FormControl value={book.bookId?.title || "Book"} disabled className="mb-2" />
                                 <FormLabel>Shelf Type:</FormLabel>
                                 <FormControl value={book.shelf} disabled />
                             </div>

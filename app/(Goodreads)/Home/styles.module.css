@@ -1,5 +1,5 @@
-/* Sign in/Up Box Styling */
-.center-box {
+/* styles.module.css */
+.centerBox {
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -7,8 +7,7 @@
     background-color: #e3d5b7;
 }
 
-/* Inner content box */
-.center-box-inner {
+.centerBoxInner {
     background-color: #ffffff;
     padding: 5rem;
     border-radius: 12px;
@@ -38,4 +37,13 @@
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     text-align: center;
+}
+
+.reviewEntry {
+    margin-bottom: 1rem;
+}
+
+.link {
+    color: #5a3e1b;
+    text-decoration: underline;
 }
