@@ -330,7 +330,9 @@ export default function Detail() {
             reviews.map((review: any) => (
               <div key={review._id} className="review-entry">
                 <div className="review-user-info"> 
-                <h4>{review.author?.username || "Unknown"}</h4>
+                  <Link href={`/Account/Profile?userId=${review.author?._id}`} className="link">
+                  <h4>{review.author?.username || "Unknown"}</h4>
+                  </Link>
                 <small className="text-muted">
                   {new Date(review.createdAt).toLocaleDateString()}
                 </small>
