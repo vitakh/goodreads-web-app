@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import "./styles.css";
+import styles from "./styles.module.css";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import {findRecentReviews, getAllReviews, findRecentReviewUser} from "../[bid]/Detail/client";
@@ -64,8 +64,8 @@ export default function Home() {
 
     return(
         <div>
-            <div className="center-box">
-                <div className="center-box-inner">
+            <div className={styles.centerBox}>
+                <div className={styles.centerBoxInner}>
                     <h1>Home Page</h1>
                     <p>Welcome to Goodreads! This is the perfect place to track your books and leave reviews with
                     all of your thoughts. You can also view the reviews of other users to get an idea of how good a book
@@ -73,14 +73,14 @@ export default function Home() {
                         using the search page! Make sure to sign in to enjoy personalized content. Enjoy!</p>
                 </div>
             </div>
-            <div className="row">
-                <div className="col">
-                    <div className="box">
+            <div className={styles.row}>
+                <div className={styles.col}>
+                    <div className={styles.box}>
                         <h3>Your Recently Added Books</h3>
                         {!currentUser && <h4>Sign in to view your own recent books added!</h4>}
                         {currentUser && shelf.length === 0 ? (<p>No books added yet.</p>) :
                             (shelf.map((book: any) => (
-                                <div key={book._id} className="review-entry">
+                                <div key={book._id} className={styles.reviewEntry}>
                                     <h4>
                                         User <UserLink userId={book.userId?._id} username={book.userId?.username} /> added 
                                         &quot;<BookLink bookId={book.bookId?._id} title={book.bookId?.title} />&quot;
@@ -90,16 +90,16 @@ export default function Home() {
                             )))}
                     </div>
                 </div>
-                <div className="col">
-                    <div className="box">
+                <div className={styles.col}>
+                    <div className={styles.box}>
                         <h3>Your Recent Reviews</h3>
                         {!currentUser && <h4>Sign in to view your own recent reviews!</h4>}
                         {reviews.length === 0 ? (<p>No reviews yet.</p>) :
                             (reviews.map((review: any) => (
-                                <div key={review._id} className="review-entry">
+                                <div key={review._id} className={styles.reviewEntry}>
                                     <h4>
                                         User <UserLink userId={review.authorId?._id} username={review.authorId?.username} /> reviewed 
-                                        &quot;<BookLink bookId={review.bookId?._id} title={review.title} />&quot;
+                                        &quot;<BookLink bookId={review.bookId} title={review.title} />&quot;
                                         on {formatDate(review.createdAt)}
                                     </h4>
                                     <p>{review.review}</p>
