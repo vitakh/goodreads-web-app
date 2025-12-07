@@ -20,8 +20,6 @@ export default function PublicProfile({
                 <FormControl className="mb-2" value={profile.lastName} disabled />
                 <FormLabel> Role: </FormLabel>
                 <FormControl className="mb-2" value={profile.role} disabled />
-                <FormLabel> Last Activity: </FormLabel>
-                <FormControl className="mb-2" value={profile.lastActivity || "N/A"} disabled />
                 {profile?.role == "AUTHOR" && !(profile.authBooks?.length === 0) &&
                     <FormLabel>
                         <p>Authored Books: </p>
