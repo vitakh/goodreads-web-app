@@ -249,7 +249,7 @@ export default function Detail() {
                     <div>
                         <p>Registered Author Account:
                         <Link href={`/Account/Profile?userId=${author._id}`} className="link">
-                           <span> {author.firstName} {author.lastName}</span><br />
+                           <span>{author.firstName || "No first name"} {author.lastName || "No last name"}</span><br />
                         </Link>
                         </p>
                     </div>

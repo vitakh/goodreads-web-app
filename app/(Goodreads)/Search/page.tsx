@@ -39,11 +39,19 @@ export default function Search() {
 
   useEffect(() => {
     const query = searchParams.get("query");
+
     if (query) {
       setSearchTerm(query);
       searchBooks(query, false);
     } else {
-      setResults([]);
+      const savedSearchTerm = localStorage.getItem("searchTerm");
+      const savedResults = localStorage.getItem("searchResults");
+      if (savedSearchTerm) {
+        setSearchTerm(savedSearchTerm);
+      }
+      if (savedResults) {
+        setResults(JSON.parse(savedResults));
+      }
     }
   }, [searchParams]);
 

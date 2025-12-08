@@ -33,7 +33,7 @@ export default function PrivateProfile({
                              onChange={(e) => setProfile({ ...profile, lastName: e.target.value })} />
                 <FormLabel> Date of Birth: </FormLabel>
                 <FormControl className="mb-2" type="date"
-                             defaultValue={profile.dob}
+                             value={profile.dob ? profile.dob.slice(0,10) : ""}
                              onChange={(e) => setProfile({ ...profile, dob: e.target.value })} />
                 <FormLabel> Email: </FormLabel>
                 <FormControl className="mb-2"
