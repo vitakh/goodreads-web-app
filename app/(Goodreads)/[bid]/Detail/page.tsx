@@ -278,7 +278,7 @@ export default function Detail() {
               )}
 
               {status && <p>{status}</p>}
-                {currentUser?.role == "AUTHOR" && !currentUser.authBooks.includes(bid) &&
+                {currentUser?.role == "AUTHOR" && author._id !== currentUser._id &&
                     <div>
                     {requested ? (
                             <button>
