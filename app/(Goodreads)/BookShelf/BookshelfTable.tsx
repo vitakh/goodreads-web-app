@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Image } from "react-bootstrap";
-import React from "react";
 import Link from "next/link";
+
 export default function BookshelfTable({ bookshelf }: { bookshelf: any[] }) {
     console.log("Bookshelf data:", bookshelf);
     return (

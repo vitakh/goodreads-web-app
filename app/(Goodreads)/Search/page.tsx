@@ -29,8 +29,8 @@ export default function Search() {
       );
       const resData = res.data.items || [];
       setResults(resData);
-      localStorage.setItem("searchTerm", searchTerm);
-      localStorage.setItem("searchResults", JSON.stringify(resData));
+      // localStorage.setItem("searchTerm", searchTerm);
+      // localStorage.setItem("searchResults", JSON.stringify(resData));
       if (push) router.push(`/Search?query=${encodeURIComponent(searchTerm)}`);
     } catch (error) {
       console.log("Error searching books: ", error);
@@ -44,14 +44,13 @@ export default function Search() {
       setSearchTerm(query);
       searchBooks(query, false);
     } else {
-      const savedSearchTerm = localStorage.getItem("searchTerm");
-      const savedResults = localStorage.getItem("searchResults");
-      if (savedSearchTerm) {
-        setSearchTerm(savedSearchTerm);
-      }
-      if (savedResults) {
-        setResults(JSON.parse(savedResults));
-      }
+      // const savedSearchTerm = localStorage.getItem("searchTerm");
+      // const savedResults = localStorage.getItem("searchResults");
+      //if (savedSearchTerm) {
+      setSearchTerm("");
+      //}
+      setResults([]);
+      //}
     }
   }, [searchParams]);
 

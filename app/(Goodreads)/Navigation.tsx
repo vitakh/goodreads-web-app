@@ -1,12 +1,11 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import {RootState} from "./store";
 export default function GoodreadsNavigation() {
     const { currentUser } = useSelector((state: RootState) => state.accountReducer);
-    const pathname = usePathname();
+    
     const links = [
         {label: "Home", path: "/Home"},
         {label: "BookShelf", path: "/BookShelf"},

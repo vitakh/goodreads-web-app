@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FaUserCircle } from "react-icons/fa";
 import "../../BookShelf/styles.css";
 import Link from "next/link";
+
 export default function UserTable({ users = [], removeUser, currentUser }: { users?: any[]; removeUser: (userId: string) => void; currentUser: any}) {
     return(
         <table className="table table-striped table-bordered bookshelf-table">

@@ -4,7 +4,6 @@ import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  addBookToShelf,
   getBookshelf,
   addShelfEntry,
   getBookById,
@@ -13,12 +12,10 @@ import {
   getSingleBookById,
 } from "../../BookShelf/client";
 import { findAuthorById } from "../../Account/client";
-import axios from "axios";
 import { Button, Form, FormControl, Image } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import {
   createReview,
-  getAllReviews,
   getReviewsByBookId,
   deleteReview,
   updateReview,
@@ -28,17 +25,14 @@ import "./styles.css";
 
 export default function Detail() {
   const [status, setStatus] = useState("");
-  const currentUser = useSelector(
-    (state: any) => state.accountReducer.currentUser
-  );
+  const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
   const [shelfType, setShelfType] = useState("want");
   const [author, setAuthor] = useState({} as any);
   const [isOnShelf, setIsOnShelf] = useState(false);
   const [loading, setLoading] = useState(true);
   const [requested, setRequested] = useState(false);
 
-
-    const [book, setBook] = useState({
+  const [book, setBook] = useState({
     id: "",
     volumeInfo: {
       title: "",
@@ -73,9 +67,7 @@ export default function Detail() {
 
   const fetchBook = async () => {
     try {
-      console.log("Fetching book with ID:", bid);
       const data = await getBookById(bid as string);
-      console.log("Fetched book data:", data);
       setBook(data);
     } catch (err) {
       console.error("Error fetching book:", err);
@@ -99,16 +91,12 @@ export default function Detail() {
     await fetchReviews();
     setLoading(false);
   }
+
   const fetchAuthors = async () => {
       const user = await findAuthorById(bid as string);
       setAuthor(user);
       console.log(user);
   }
-
-  useEffect(() => {
-    fetchData();
-    fetchAuthors();
-  }, [bid]);
 
   const handleAddToShelf = async () => {
     if (!currentUser || !book) {
@@ -118,7 +106,7 @@ export default function Detail() {
 
     try {
       let dbBook = await getSingleBookById(bid as string);
-      console.log("LOG", dbBook);
+      
       if (!dbBook) {
         const bookData = {
           _id: bid,
@@ -172,7 +160,7 @@ export default function Detail() {
     try {
       await createReview({
         review: newReview,
-          title: book.volumeInfo.title,
+        title: book.volumeInfo.title,
         bookId: bid,
         authorId: currentUser._id,
       });
@@ -195,7 +183,7 @@ export default function Detail() {
     await fetchReviews();
   };
 
-    const handlePostRequest = async () => {
+  const handlePostRequest = async () => {
         if (!currentUser) {
             alert("Please sign in to claim a book.");
             redirect("/Account/Signin");
@@ -213,6 +201,11 @@ export default function Detail() {
         }
     };
 
+  useEffect(() => {
+    fetchData();
+    fetchAuthors();
+  }, [bid]);
+
   const info = book.volumeInfo;
   console.log("Book info:", info);
   console.log("Full book object:", book);
@@ -220,7 +213,8 @@ export default function Detail() {
   const text = html ? html.replace(/<[^>]*>/g, "").trim() : "No Description";
 
   if (loading) return <div>Loading...</div>;
-    return (
+
+  return (
     <div>
       <div className="center-box">
         <div className="center-box-inner">
@@ -362,8 +356,7 @@ export default function Detail() {
                   </div>
                 )}
                 {currentUser &&
-                  (currentUser._id === review.authorId ||
-                    currentUser.role === "ADMIN") &&
+                  (currentUser._id === review.authorId || currentUser.role === "ADMIN") &&
                   editReviewId !== review._id && (
                     <div>
                       <Button

@@ -18,12 +18,15 @@ export default function Signup() {
         password: "",
         role: "USER",
     });
+    
     const dispatch = useDispatch();
+
     const signup = async () => {
         const currentUser = await client.signup(user);
         dispatch(setCurrentUser(currentUser));
         redirect("/Account/Profile");
     };
+
     return (
         <div className={"center-box"}>
             <div className={"center-box-inner"}>
