@@ -31,6 +31,7 @@ export default function Detail() {
   const [isOnShelf, setIsOnShelf] = useState(false);
   const [loading, setLoading] = useState(true);
   const [requested, setRequested] = useState(false);
+  const [authorId, setAuthorId] = useState("0");
 
   const [book, setBook] = useState({
     id: "",
@@ -95,6 +96,7 @@ export default function Detail() {
   const fetchAuthors = async () => {
       const user = await findAuthorById(bid as string);
       setAuthor(user);
+      setAuthorId(user?._id || "0");
       console.log(user);
   }
 
@@ -272,7 +274,7 @@ export default function Detail() {
               )}
 
               {status && <p>{status}</p>}
-                {currentUser?.role == "AUTHOR" && author._id !== currentUser._id &&
+                {currentUser?.role == "AUTHOR" && authorId !== currentUser._id &&
                     <div>
                     {requested ? (
                             <button>
