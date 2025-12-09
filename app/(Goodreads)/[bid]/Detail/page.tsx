@@ -27,11 +27,11 @@ export default function Detail() {
   const [status, setStatus] = useState("");
   const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
   const [shelfType, setShelfType] = useState("want");
-  const [author, setAuthor] = useState({} as any);
+  const [author, setAuthor] = useState<any[]>([]);
   const [isOnShelf, setIsOnShelf] = useState(false);
   const [loading, setLoading] = useState(true);
   const [requested, setRequested] = useState(false);
-  const [authorId, setAuthorId] = useState("0");
+  const [authorId, setAuthorId] = useState(true);
 
   const [book, setBook] = useState({
     id: "",
@@ -96,7 +96,9 @@ export default function Detail() {
   const fetchAuthors = async () => {
       const user = await findAuthorById(bid as string);
       setAuthor(user);
-      setAuthorId(user?._id || "0");
+      if (user.find((auth: any) => auth?._id === currentUser._id)) {
+          setAuthorId(false);
+      }
       console.log(user);
   }
 
@@ -242,13 +244,15 @@ export default function Detail() {
                 </p>
               )}
                 {author &&
-                    <div>
-                        <p>Registered Author Account:
-                        <Link href={`/Account/Profile?userId=${author._id}`} className="link">
-                           <span>{author.firstName || "No first name"} {author.lastName || "No last name"}</span><br />
-                        </Link>
-                        </p>
-                    </div>
+                    author.map((auth : any)=> (
+                        <div key={auth._id}>
+                            <p>Registered Author Account:
+                                <Link href={`/Account/Profile?userId=${auth?._id}`} className="link">
+                                    <span>{auth?.firstName || "No first name"} {auth?.lastName || "No last name"}</span><br />
+                                </Link>
+                            </p>
+                        </div>
+                    ))
                 }
               {isOnShelf ? (
                 <button onClick={handleRemoveFromShelf}>
@@ -274,7 +278,7 @@ export default function Detail() {
               )}
 
               {status && <p>{status}</p>}
-                {currentUser?.role == "AUTHOR" && authorId !== currentUser._id &&
+                {currentUser?.role == "AUTHOR" && authorId &&
                     <div>
                     {requested ? (
                             <button>
