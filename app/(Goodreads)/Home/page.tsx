@@ -3,9 +3,9 @@
 import styles from "./styles.module.css";
 import Link from "next/link";
 import { useSelector } from "react-redux";
-import {findRecentReviews, getAllReviews, findRecentReviewUser} from "../[bid]/Detail/client";
+import {findRecentReviews, findRecentReviewUser} from "../[bid]/Detail/client";
 import { useEffect, useState } from "react";
-import {getBookById, findRecentShelf, findRecentShelfUser} from "../BookShelf/client";
+import {findRecentShelf, findRecentShelfUser} from "../BookShelf/client";
 import Footer from "../Footer";
 
 // Helper components for cleaner code
@@ -27,8 +27,8 @@ export default function Home() {
     const [reviews, setReviews] = useState([]);
     const [shelf, setShelf] = useState([]);
     const [loading, setLoading] = useState(true);
-
     const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
+
     const fetchReviews = async () => {
         if (!currentUser) {
             const data = await findRecentReviews();
@@ -108,11 +108,7 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            {/* <div className="center-box"> */}
-                {/* <div className="center-box-inner"> */}
-                    <Footer />
-                {/* </div> */}
-            {/* </div> */}
-        </div>
+         <Footer />
+    </div>
     );
 }

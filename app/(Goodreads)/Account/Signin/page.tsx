@@ -12,10 +12,12 @@ export default function Signin() {
         username: string;
         password: string;
     }
+
     const [credentials, setCredentials] = useState<Credentials>({
         username: "",
         password: ""
     });
+
     const dispatch = useDispatch();
     const signin = async () => {
         const user =  await client.signin(credentials);
@@ -23,6 +25,7 @@ export default function Signin() {
         dispatch(setCurrentUser(user));
         redirect("/Account/Profile");
     };
+    
     return (
         <div className={"center-box"}>
             <div className={"center-box-inner"}>
